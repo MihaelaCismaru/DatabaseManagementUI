@@ -1,0 +1,411 @@
+﻿<Window x:Class="DatabaseManagement.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DatabaseManagement"
+        mc:Ignorable="d"
+        Title="Miki's Database Manager" WindowStartupLocation="CenterScreen" Icon ="star.png" Height="500" Width="1000"  MinWidth="1000" MinHeight="500" Loaded="Window_Loaded">
+    <Window.Background>
+        <ImageBrush ImageSource="backgroundImage.jpg" Stretch="Fill" />
+    </Window.Background>
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0 0 0 20" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="0 0 0 20" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontFamily" Value="Verdana"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5 5 5 5"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="MyContentPresenter" 
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#666666"/>
+                    <Setter Property="Foreground" Value="#E8E8E8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="DarkRed"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Opacity" Value="0.9"/>
+            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        </Style>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border 
+                                Name="Border"
+                                Margin="0,0,-4,0" 
+                                Background="Black"           
+                                BorderBrush="White" 
+                                BorderThickness="1,1,1,1" 
+                                CornerRadius="2,12,0,0" >
+                                <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Margin="12,2,12,2"
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="100" />
+                                <Setter TargetName="Border" Property="Background" Value="White" />
+                                <Setter Property="Foreground" Value="Black" />
+                                <Setter Property="FontFamily" Value="Verdana"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Panel.ZIndex" Value="100" />
+                                <Setter TargetName="Border" Property="Background" Value="Black" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="FontFamily" Value="Verdana"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <TabControl Background="Transparent">
+            <TabItem Header="Pacienti">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Name="PacientTable" Grid.RowSpan="7" Grid.Row="1" SelectionChanged="PacientTable_SelectionChanged" Grid.Column="1"/>
+                    <Label Grid.Column="3" Grid.Row="1">CNP</Label>
+                    <Label Grid.Column="3" Grid.Row="2" Margin="0,0,0,1">Nume</Label>
+                    <Label Grid.Column="3" Grid.Row="3">Prenume</Label>
+                    <Label Grid.Column="3" Grid.Row="4">Varsta</Label>
+                    <Label Grid.Column="3" Grid.Row="5">Tip Asigurare</Label>
+                    <Button Grid.Row="7" Grid.Column="3" Click="Pacient_Reset_Click" >Camp nou</Button>
+                    <Button Name="Pacient_Adauga_Button" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Click="Pacient_Adauga_Click">Adauga</Button>
+                    <Button Name="Pacient_Actualizeaza_Button" Grid.Row="7" Grid.Column="6" Click="Pacient_Actualizeaza_Click" IsEnabled="False" >Actualizeaza</Button>
+                    <Button Name="Pacient_Sterge_Button" Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" Click="Pacient_Sterge_Click" IsEnabled="False" >Sterge</Button>
+                    <TextBox Name="Pacient_CNP" Grid.Column="5" Grid.ColumnSpan="3" Grid.Row="1"/>
+                    <TextBox Name="Pacient_Nume" Grid.Row="2" Grid.Column="5" Grid.ColumnSpan="3"></TextBox>
+                    <TextBox Name="Pacient_Prenume" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="3"></TextBox>
+                    <TextBox Name="Pacient_Varsta" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="3"></TextBox>
+                    <ComboBox Name="Pacient_TipAsigurare" SelectedValuePath="Content" Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="3">
+                        <ComboBoxItem>Angajat</ComboBoxItem>
+                        <ComboBoxItem>Student</ComboBoxItem>
+                        <ComboBoxItem>Minor</ComboBoxItem>
+                        <ComboBoxItem>Pensionar</ComboBoxItem>
+                        <ComboBoxItem>Handicap</ComboBoxItem>
+                        <ComboBoxItem>Sarcina</ComboBoxItem>
+                        <ComboBoxItem>Maternitate</ComboBoxItem>
+                        <ComboBoxItem>Somaj</ComboBoxItem>
+                        <ComboBoxItem>Social</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="6" Name="Pacient_Error"></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Diagnostice">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Name="DiagnosticTable" Grid.Column="1" Grid.Row="1" Grid.RowSpan="7" SelectionChanged="DiagnosticTable_SelectionChanged"/>
+                    <Label Grid.Column="3" Grid.Row="1">Cod boala</Label>
+                    <Label Grid.Column="3" Grid.Row="2">Denumire</Label>
+                    <Label Grid.Column="3" Grid.Row="3">Tip</Label>
+                    <Button Grid.Row="7" Grid.Column="3" Click="Diagnostic_Reset_Click">Camp nou</Button>
+                    <Button Name="Diagnostic_Adauga_Button" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Click="Diagnostic_Adauga_Click">Adauga</Button>
+                    <Button Name="Diagnostic_Actualizeaza_Button" Grid.Row="7" Grid.Column="6" IsEnabled="False" Click="Diagnostic_Actualizeaza_Click">Actualizeaza</Button>
+                    <Button Name="Diagnostic_Sterge_Button" Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" IsEnabled="False" Click="Diagnostic_Sterge_Click">Sterge</Button>
+                    <TextBox Name="Diagnostic_CodBoala" Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="3"></TextBox>
+                    <TextBox Name="Diagnostic_Denumire" Grid.Row="2" Grid.Column="5" Grid.ColumnSpan="3"></TextBox>
+                    <ComboBox Name="Diagnostic_Tip" SelectedValuePath="Content" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="3">
+                        <ComboBoxItem>Prezumtiv</ComboBoxItem>
+                        <ComboBoxItem>Definitiv</ComboBoxItem>
+                        <ComboBoxItem>Diferential</ComboBoxItem>
+                        <ComboBoxItem>Clinic</ComboBoxItem>
+                        <ComboBoxItem>Paraclinic</ComboBoxItem>
+                        <ComboBoxItem>Intraoperator</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="6" Name="Diagnostic_Error"></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Tratamente">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="25*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Name="TratamentTable" Grid.Column="1" Grid.Row="1" Grid.RowSpan="7" SelectionChanged="TratamentTable_SelectionChanged"/>
+                    <Label Grid.Column="3" Grid.Row="1">Pozitie</Label>
+                    <Label Grid.Column="3" Grid.Row="2">Cod boala</Label>
+                    <Label Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="2">Cod medicament</Label>
+                    <Label Grid.Column="3" Grid.Row="4" Grid.ColumnSpan="2">Denumire medicament</Label>
+                    <Label Grid.Column="3" Grid.Row="5">Cantitate</Label>
+                    <Button Grid.Row="7" Grid.Column="3" Click="Tratament_Reset_Click">Camp nou</Button>
+                    <Button Name="Tratament_Adauga_Button" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Click="Tratament_Adauga_Click">Adauga</Button>
+                    <Button Name="Tratament_Actualizeaza_Button" Grid.Row="7" Grid.Column="6" IsEnabled="False" Click="Tratament_Actualizeaza_Click">Actualizeaza</Button>
+                    <Button Name="Tratament_Sterge_Button" Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" IsEnabled="False" Click="Tratament_Sterge_Click">Sterge</Button>
+                    <TextBox Name="Tratament_Pozitie" Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="3"></TextBox>
+                    <ComboBox Name="Tratament_CodBoala" SelectedValuePath="Content" Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="3"></ComboBox>
+                    <TextBox Name="Tratament_CodMedicament" Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="3"></TextBox>
+                    <TextBox Name="Tratament_DenumireMedicament" Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="3"></TextBox>
+                    <TextBox Name="Tratament_Cantitate" Grid.Row="5" Grid.Column="6" Grid.ColumnSpan="3"></TextBox>
+                    <TextBlock Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="6" Name="Tratament_Error"></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Retete">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Name="RetetaTable" Grid.Column="1" Grid.Row="1" Grid.RowSpan="7" SelectionChanged="RetetaTable_SelectionChanged"/>
+                    <Label Grid.Column="3" Grid.Row="1">Numar reteta</Label>
+                    <Label Grid.Column="3" Grid.Row="2">Pacient</Label>
+                    <Label Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="2">Unitate medicala</Label>
+                    <Label Grid.Column="3" Grid.Row="4" Grid.ColumnSpan="2">Judet</Label>
+                    <Label Grid.Column="3" Grid.Row="5">Cod medic</Label>
+                    <Button Grid.Row="7" Grid.Column="3" Click="Reteta_Reset_Click">Camp nou</Button>
+                    <Button Name="Reteta_Adauga_Button" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Click="Reteta_Adauga_Click">Adauga</Button>
+                    <Button Name="Reteta_Actualizeaza_Button"  Grid.Row="7" Grid.Column="6" Click="Reteta_Actualizeaza_Click">Actualizeaza</Button>
+                    <Button Name="Reteta_Sterge_Button"  Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" Click="Reteta_Sterge_Click">Sterge</Button>
+                    <TextBox Name="Reteta_NumarReteta" Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="3"></TextBox>
+                    <ComboBox Name="Reteta_Pacient" Grid.Row="2" SelectedValuePath="Content" Grid.Column="6" Grid.ColumnSpan="3"/>
+                    <TextBox Name="Reteta_UnitateMedicala" Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="3"></TextBox>
+                    <ComboBox Name="Reteta_Judet" Grid.Row="4"  SelectedValuePath="Content" Grid.Column="6" Grid.ColumnSpan="3">
+                        <ComboBoxItem>Alba</ComboBoxItem>
+                        <ComboBoxItem>Arad</ComboBoxItem>
+                        <ComboBoxItem>Argeș</ComboBoxItem>
+                        <ComboBoxItem>Bacău</ComboBoxItem>
+                        <ComboBoxItem>Bihor</ComboBoxItem>
+                        <ComboBoxItem>Bistrița-Năsăud</ComboBoxItem>
+                        <ComboBoxItem>Botoșani</ComboBoxItem>
+                        <ComboBoxItem>Brăila</ComboBoxItem>
+                        <ComboBoxItem>Brașov</ComboBoxItem>
+                        <ComboBoxItem>București</ComboBoxItem>
+                        <ComboBoxItem>Buzău</ComboBoxItem>
+                        <ComboBoxItem>Călărași</ComboBoxItem>
+                        <ComboBoxItem>Caraș-Severin</ComboBoxItem>
+                        <ComboBoxItem>Cluj</ComboBoxItem>
+                        <ComboBoxItem>Constanța</ComboBoxItem>
+                        <ComboBoxItem>Covasna</ComboBoxItem>
+                        <ComboBoxItem>Dâmbovița</ComboBoxItem>
+                        <ComboBoxItem>Dolj</ComboBoxItem>
+                        <ComboBoxItem>Galați</ComboBoxItem>
+                        <ComboBoxItem>Giurgiu</ComboBoxItem>
+                        <ComboBoxItem>Gorj</ComboBoxItem>
+                        <ComboBoxItem>Harghita</ComboBoxItem>
+                        <ComboBoxItem>Hunedoara</ComboBoxItem>
+                        <ComboBoxItem>Ialomița</ComboBoxItem>
+                        <ComboBoxItem>Iași</ComboBoxItem>
+                        <ComboBoxItem>Ilfov</ComboBoxItem>
+                        <ComboBoxItem>Maramureș</ComboBoxItem>
+                        <ComboBoxItem>Mehedinți</ComboBoxItem>
+                        <ComboBoxItem>Mureș</ComboBoxItem>
+                        <ComboBoxItem>Neamț</ComboBoxItem>
+                        <ComboBoxItem>Olt</ComboBoxItem>
+                        <ComboBoxItem>Prahova</ComboBoxItem>
+                        <ComboBoxItem>Satu Mare</ComboBoxItem>
+                        <ComboBoxItem>Sălaj</ComboBoxItem>
+                        <ComboBoxItem>Sibiu</ComboBoxItem>
+                        <ComboBoxItem>Suceava</ComboBoxItem>
+                        <ComboBoxItem>Teleorman</ComboBoxItem>
+                        <ComboBoxItem>Timiș</ComboBoxItem>
+                        <ComboBoxItem>Tulcea</ComboBoxItem>
+                        <ComboBoxItem>Vâlcea</ComboBoxItem>
+                        <ComboBoxItem>Vaslui</ComboBoxItem>
+                        <ComboBoxItem>Vrancea</ComboBoxItem>
+                    </ComboBox>
+                    <TextBox Name="Reteta_Medic" Grid.Row="5" Grid.Column="6" Grid.ColumnSpan="3"></TextBox>
+                    <TextBlock Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="6" Name="Reteta_Error"></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Tratamente retete">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Name="TRTable" Grid.Column="1" Grid.Row="1" Grid.RowSpan="7" SelectionChanged="TRTable_SelectionChanged"/>
+                    <Label Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="3">Numar reteta</Label>
+                    <Label Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="3">Pozitie tratament</Label>
+                    <Button Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Click="TR_Reset_Click">Camp nou</Button>
+                    <Button Name="TR_Adauga_Button" Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="2" Click="TR_Adauga_Click">Adauga</Button>
+                    <Button Name="TR_Sterge_Button"  Grid.Row="7" Grid.Column="9" Grid.ColumnSpan="2" IsEnabled="False" Click="TR_Sterge_Click">Sterge</Button>
+                    <ComboBox Name="TR_NumarReteta" Grid.Row="1" SelectedValuePath="Content" Grid.Column="6" Grid.ColumnSpan="4"/>
+                    <ComboBox Name="TR_PozitieTratament" Grid.Row="2" SelectedValuePath="Content" Grid.Column="6" Grid.ColumnSpan="4"/>
+                    <TextBlock Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="8" Name="TR_Error"></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Statistici">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Name="StatisticiTable" Grid.Column="1" Grid.Row="1" Grid.RowSpan="7"/>
+                    <Button Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="6" Click="CalculeazaStatisticaReteta_Click">Calculeaza numarul de retete pentru fiecare pacient</Button>
+                    <Button Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="6" Click="CalculeazaStatisticaMedicamente_Click">Calculeaza cantitatea eliberata din fiecare medicament</Button>
+                    <Button Grid.Column="3" Grid.Row="5" Grid.ColumnSpan="6" Click="CalculeazaStatisticaBoli_Click">Calculeaza frecventa tuturor bolilor diagnosticate</Button>
+                    <TextBlock Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="8" Name="Statistici_Error"></TextBlock>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
